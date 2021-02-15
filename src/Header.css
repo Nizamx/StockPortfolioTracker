@@ -1,35 +1,68 @@
-.Header-wrapper{
+.header__wrapper {
+    background-color: black;
+    color: white;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-items: space-between;
     height: 64px;
-    color: white; 
-}
-
-.Header-search{
+  }
+  
+  .header__logo {
+    margin-left: 48px;
+  }
+  
+  .header__search {
     display: flex;
-    height: 40px;
-    padding: 10px;
     align-items: center;
-}
-
-.Header-searchContainer{
+    background-color: black;
+    height: 39px;
+    padding: 10px;
+  }
+  
+  .header__searchContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
     height: 20px;
     border: 1px solid #31363A;
+    padding: 5px;
     border-radius: 4px;
-    width: 375px;
-}
-
-.Header-searchContainer > input {
-    background-color: transparent;
+  }
+  
+  .header__searchContainer > .MuiSvgIcon-root {
+    color: gray;
+    padding: 10px;
+  }
+  
+  .header__searchContainer > input {
     border: none;
-    width: 100%;
+    width: 375px;
     margin-left: 5px;
-    margin-right: 5px; 
+    margin-right: 10px;
+    background-color: black;
     color: white;
-
-}
-
-.Header-searchContainer > input:focus{
+  }
+  
+  .header__searchContainer > input:focus {
     outline: none;
-}
+  }
+  
+  .header__menuItems {
+    margin-right: 48px;
+  }
+  
+  .header__menuItems a {
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+  }
+  
+  .header__menuItems a:hover,
+  .header__menuItems a:active {
+    color: #0d33b1;
+  }
+  
+  a:first-of-type {
+    color: #ffffff;
+  }
