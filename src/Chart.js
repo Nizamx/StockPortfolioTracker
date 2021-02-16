@@ -3,6 +3,7 @@ import Chart from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { stock } from './Stock.js'
 import { ThreeDRotationSharp } from '@material-ui/icons';
+import { responsiveFontSizes } from '@material-ui/core';
 
 class StockRow extends Component {
 
@@ -13,36 +14,48 @@ class StockRow extends Component {
             date: null,
             time: null,
             percent_change: null,
-            dolla_change: null
+            dollar_change: null,
+
+            stockChartXValue: [],
+            stockChartYValue: []
         }
     }
 
     changeStyle () {
         return {
-        color: (this.state.dolla_change > 0) ? '#4caf50' : '#e53935',
+        color: (this.state.dollar_change > 0) ? '#4caf50' : '#e53935',
         fontSize: '0.8rem',
         marginLeft: 5
     }
 
       }
-    applyData (data){
+
+      applyData (data){
+        console.log(data)
         this.setState({
             price: data.price.toFixed(2),
             date: data.date,
             time: data.time,
+            x: data.stockChartXValue,
+            y: data.stockChartYValue
         });
-        stock.getYesterdayClose(this.props.ticker, data.date, (yesterday) => {
+
+
+        stock.previousDay(this.props.ticker, (yesterday) => {
+
             const dollar_change = (data.price - yesterday.price).toFixed(2);
-            const percent_change = (100 * data.price / yesterday.price).toFixed(2);
+            const percent_change = (100 * dollar_change/ yesterday.price).toFixed(2);
+
             this.setState({
                 dollar_change: `${dollar_change}`,
-                percent_change: ` (${percent_change}%)`
+                percent_change: `(${percent_change}%)`
             })
         })
     }
 
        componentDidMount() {
-        stock.latestPrice(this.props.ticker, this.applyData.bind(this))
+        //stock.latestPrice(this.props.ticker, this.applyData.bind(this))
+        stock.fetchStock(this.props.ticker, this.applyData.bind(this));
         }
 
 render () {
@@ -57,39 +70,5 @@ render () {
     )
 }
 }
-/*
-const StockGraph  = () => {
-  
-    costructor(props) {
 
-    } 
-    
-    axios
-    .get(url)
-    .then(res => {
-      console.log(res);
-  })
-  .catch(error => {
-      console.log(error);
-  });
-
-    return (
-        <div> 
-            <Line
-            data = {{
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-            }
-            }
-            height={400}
-            width={600}
-            
-            options={{
-                maintainAspectRatio: false
-            }}
-
-            />
-        </div>
-    )
-}
-*/
 export default StockRow

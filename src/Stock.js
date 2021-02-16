@@ -1,6 +1,13 @@
 import { iex }  from './IEXAPI.js'
 
+
 export const stock = {
+
+    fetchStock(ticker,callback) {
+        fetch(stock.latestPriceURL(ticker))
+        .then((response) => response.json())
+        .then((data) => callback(stock.stockDataFormat(data)))
+    },
 
     latestPrice: (ticker,callback) => {
         fetch(stock.latestPriceURL(ticker))
@@ -8,8 +15,18 @@ export const stock = {
         .then((data) => callback(stock.formatPriceData(data)))
     },
 
+    previousDay: (ticker,callback) => {
+        fetch(stock.previousDayURL(ticker))
+        .then((response) => response.json())
+        .then((data) => callback(stock.formatPreviousPriceData(data)))
+    },
+
     latestPriceURL: (ticker) => {
-        return `${iex.base_url}/stock/${ticker}/intraday-prices?chartLast=1&token=${iex.api_token}`
+        return `${iex.base_url}/stock/${ticker}/intraday-prices?token=${iex.api_token}`
+    },
+ 
+    previousDayURL: (ticker) => {
+        return `${iex.base_url}/stock/${ticker}/previous?token=${iex.api_token}`
     },
 
     formatPriceData: (data) => {
@@ -21,16 +38,30 @@ export const stock = {
             return formattedData
     },
 
-    getYesterdayClose: (ticker, date, callback) => {
-        fetch(stock.yesterdaysClosePriceURL(ticker,date))
-        .then((response) => response.json())
-        .then((data) => callback(stock.formatPriceData(data)))
-        
-    },
+    formatPreviousPriceData: (data) => {
+        const stockData = data
+        const formattedData ={}
+        formattedData.price = stockData.close
+        formattedData.date = stockData.date
+        formattedData.time = stockData.label
+        return formattedData
+},
 
-    yesterdaysClosePriceURL: (ticker,date) => {
-        return `${iex.base_url}/stock/${ticker}/intraday-prices?chartLast=1&token=${iex.api_token}`
-        //return `${iex.base_url}/stock/${ticker}/previous?chartLast=1&token=${iex.api_token}`
-    },
+    stockDataFormat: (data) => {
+        const stockData = data
+        const formattedData ={
+            mins:[],
+            price:[],
+            date:[],
+        }
+        
+        for (var i = 0; i < 5; i++){
+        formattedData.mins[i] = data[i].minute;
+        formattedData.price[i] = data[i].close
+        formattedData.date[i] = data[i].date
+    }
+        return formattedData
+        
+},
 
 }
